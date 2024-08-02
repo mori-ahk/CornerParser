@@ -7,29 +7,41 @@
 
 import Foundation
 
-enum ASTNode {
+enum ASTNode: Equatable {
     case diagram(children: [ASTNode])
     case node(NodeDecl)
     case edge(EdgeDecl)
     
-    enum NodeAttribute {
+    enum NodeAttribute: Equatable {
        case color(String)
     }
     
-    enum EdgeAttribute {
+    enum EdgeAttribute: Equatable {
         case color(String)
         case label(String)
     }
     
-    struct NodeDecl {
+    struct NodeDecl: Equatable {
         let id: String
         let attribute: NodeAttribute?
         let children: [ASTNode.NodeDecl]
+        
+        init(id: String, attribute: NodeAttribute? = nil, children: [ASTNode.NodeDecl] = []) {
+            self.id = id
+            self.attribute = attribute
+            self.children = children
+        }
     }
     
-    struct EdgeDecl {
+    struct EdgeDecl: Equatable {
         let from: String
         let to: String
         let attributes: [EdgeAttribute]
+        
+        init(from: String, to: String, attributes: [EdgeAttribute] = []) {
+            self.from = from
+            self.to = to
+            self.attributes = attributes
+        }
     }
 }
