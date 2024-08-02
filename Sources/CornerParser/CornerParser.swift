@@ -8,12 +8,12 @@ final class CornerParser {
         self.parser = Parser(lexer: Lexer(input: input))
     }
     
-    func parse() throws {
+    func parse() throws -> ASTNode? {
         do {
-            let ast = try parser.parse()
-            dump(ast)
+            return try parser.parse()
         } catch {
             print(error)
+            return nil
         }
     }
 }
