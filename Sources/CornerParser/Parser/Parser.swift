@@ -35,8 +35,8 @@ class Parser {
             switch currentToken {
             case .node:
                 elements.append(.node(try parseNode()))
-//            case .edge:
-//                elements.append(.edge(try parseEdge()))
+            case .edge:
+                elements.append(.edge(try parseEdge()))
             default:
                 throw ParseError.unexpectedToken(expected: .node, actual: currentToken)
             }
@@ -57,51 +57,82 @@ class Parser {
         advance()
         try expect(.lbrace)
         
-        if currentToken == .color {
-            try expect(.color)
-            try expect(.colon)
-            guard case let .identifier(color) = currentToken else {
-                throw ParseError.expectedIdentifier
+        while currentToken != .rbrace {
+            switch currentToken {
+            case .color:
+                try expect(.color)
+                try expect(.colon)
+                guard case let .identifier(color) = currentToken else {
+                    throw ParseError.expectedIdentifier
+                }
+                attribute = .color(color)
+                advance()
+                
+            case .node:
+                children.append(try parseNode())
+                
+            default:
+                throw ParseError.unexpectedToken(expected: .rbrace, actual: currentToken)
             }
-            
-            attribute = .color(color)
-            advance()
-        }
-        
-        if currentToken == .node {
-            children.append(try parseNode())
         }
         
         try expect(.rbrace)
         return ASTNode.NodeDecl(id: id, attribute: attribute, children: children)
     }
     
-//    private func parseEdge() throws -> ASTNode.EdgeDecl {
-//        try expect(.edge)
-//        guard case let .identifier(id) = currentToken else {
-//            throw ParseError.expectedIdentifier
-//        }
-//        advance()
-//        
-//        try expect(.identifier)
-//        guard case let .identifier(fromId) = currentToken else {
-//            throw ParseError.expectedIdentifier
-//        }
-//        advance()
-//        
-//        try expect(.to)
-//        guard case let .identifier(toId) = currentToken else {
-//            throw ParseError.expectedIdentifier
-//        }
-//        advance()
-//        
-//        guard case let .label(label) = currentToken else {
-//            throw ParseError.expectedLabel
-//        }
-//        advance()
-//        
-//        return ASTNode.EdgeDecl(from: fromId, to: toId, label: label)
-//    }
+    private func parseEdge() throws -> ASTNode.EdgeDecl {
+        var attributes: [ASTNode.EdgeAttribute] = []
+        try expect(.edge)
+        guard case let .identifier(from) = currentToken else {
+            throw ParseError.expectedIdentifier
+        }
+        advance()
+        
+        try expect(.arrow)
+        guard case let .identifier(to) = currentToken else {
+            throw ParseError.expectedIdentifier
+        }
+        advance()
+        
+        try expect(.lbrace)
+       
+        while currentToken != .rbrace {
+            switch currentToken {
+            case .color:
+                attributes.append(try parseColorAttribute())
+            case .label:
+                attributes.append(try parseLabelAttribute())
+            default:
+                throw ParseError.unexpectedToken(expected: .rbrace, actual: currentToken)
+            }
+        }
+        
+        try expect(.rbrace)
+        return ASTNode.EdgeDecl(from: from, to: to, attributes: attributes)
+    }
+    
+    
+    private func parseColorAttribute() throws -> ASTNode.EdgeAttribute {
+        try expect(.color)
+        try expect(.colon)
+        guard case let .identifier(color) = currentToken else {
+            throw ParseError.expectedIdentifier
+        }
+        advance()
+        return .color(color)
+    }
+
+    private func parseLabelAttribute() throws -> ASTNode.EdgeAttribute {
+        try expect(.label)
+        try expect(.colon)
+        try expect(.quote)
+        guard case let .identifier(label) = currentToken else {
+            throw ParseError.expectedIdentifier
+        }
+        advance()
+        try expect(.quote)
+        return .label(label)
+    }
 }
 
 enum ParseError: Error, CustomStringConvertible {

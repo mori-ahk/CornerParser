@@ -11,7 +11,7 @@ final class CornerParser {
     func parse() throws {
         do {
             let ast = try parser.parse()
-            print(ast)
+            dump(ast)
         } catch {
             print(error)
         }

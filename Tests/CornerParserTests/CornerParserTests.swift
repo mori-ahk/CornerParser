@@ -10,6 +10,15 @@ final class CornerParserTests: XCTestCase {
                 color: blue
             }
         }
+        
+        node B {
+            color: yellow
+        }
+        
+        edge A -> B {
+            color: blue
+            label: "hel"
+        }
         """
         let parser = CornerParser(input: input)
         try parser.parse()
