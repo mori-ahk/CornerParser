@@ -2,18 +2,18 @@
 // https://docs.swift.org/swift-book
 
 final class CornerParser {
-    let lexer: Lexer
-    var token: Token
+    let parser: Parser
     
-    init(input: String, token: Token = .eof) {
-        self.lexer = Lexer(input: input)
-        self.token = token
+    init(input: String) {
+        self.parser = Parser(lexer: Lexer(input: input))
     }
     
-    func lex() {
-        repeat {
-            token = lexer.nextToken()
-            print(token)
-        } while token != .eof
+    func parse() throws {
+        do {
+            let ast = try parser.parse()
+            print(ast)
+        } catch {
+            print(error)
+        }
     }
 }
