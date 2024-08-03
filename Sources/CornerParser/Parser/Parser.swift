@@ -135,19 +135,3 @@ class Parser {
     }
 }
 
-enum ParseError: Error, CustomStringConvertible {
-    case unexpectedToken(expected: Token, actual: Token)
-    case expectedIdentifier
-    case expectedLabel
-    
-    var description: String {
-        switch self {
-        case let .unexpectedToken(expected, actual):
-            return "Unexpected token: expected \(expected), got \(actual)"
-        case .expectedIdentifier:
-            return "Expected identifier"
-        case .expectedLabel:
-            return "Expected label"
-        }
-    }
-}

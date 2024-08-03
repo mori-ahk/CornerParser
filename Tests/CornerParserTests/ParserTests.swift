@@ -196,4 +196,84 @@ final class ParserTests: XCTestCase {
             )
         )
     }
+    
+    func testEdgeDecls() throws {
+        let input = """
+        edge A -> B {}
+        edge A -> C {}
+        """
+        let parser = CornerParser(input: input)
+        let ast = try parser.parse()
+        XCTAssertEqual(
+            ast,
+            .diagram(
+                children: [
+                    .edge(.init(from: "A", to: "B")),
+                    .edge(.init(from: "A", to: "C"))
+                ]
+            )
+        )
+    }
+    
+    func testEdgeDeclsWithAttributes() throws {
+        let input = """
+        edge A -> B {
+            color: blue
+            label: "AtoB"
+        }
+        edge A -> C {
+            color: red
+            label: "AtoC"
+        }
+        """
+        let parser = CornerParser(input: input)
+        let ast = try parser.parse()
+        XCTAssertEqual(
+            ast,
+            .diagram(
+                children: [
+                    .edge(
+                        .init(
+                            from: "A",
+                            to: "B",
+                            attributes: [.color("blue"), .label("AtoB")]
+                        )
+                    ),
+                    .edge(
+                        .init(
+                            from: "A",
+                            to: "C",
+                            attributes: [.color("red"), .label("AtoC")]
+                        )
+                    )
+                ]
+            )
+        )
+    }
+    
+    func testExpectedIdentifierError() throws {
+        let input = """
+        node {
+            color: blue
+            label: "AtoB"
+        }
+        """
+        let parser = CornerParser(input: input)
+        XCTAssertThrowsError(try parser.parse()) { error in
+            XCTAssertEqual(error as? ParseError, .expectedIdentifier)
+        }
+    }
+    
+    func testUnexpectedTokenError() throws {
+        let input = """
+        node A -> {
+            color: blue
+            label: "AtoB"
+        }
+        """
+        let parser = CornerParser(input: input)
+        XCTAssertThrowsError(try parser.parse()) { error in
+            XCTAssertEqual(error as? ParseError, .unexpectedToken(expected: .lbrace, actual: .arrow))
+        }
+    }
 }

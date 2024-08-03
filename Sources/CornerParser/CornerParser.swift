@@ -12,8 +12,7 @@ final class CornerParser {
         do {
             return try parser.parse()
         } catch {
-            print(error)
-            return nil
+            throw error
         }
     }
 }
