@@ -10,11 +10,8 @@ final class CornerParser {
     
     func parse() throws -> ASTNode? {
         do {
-            let ast = try parser.parse()
-            dump(ast)
-            return ast
+            return try parser.parse()
         } catch {
-            print(error)
             throw error
         }
     }
