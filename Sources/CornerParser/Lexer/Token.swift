@@ -20,4 +20,9 @@ enum Token: Equatable {
     case quote
     case unknown(String)
     case eof
+    
+    struct Position: Equatable {
+        var line: Int
+        var column: Int
+    }
 }

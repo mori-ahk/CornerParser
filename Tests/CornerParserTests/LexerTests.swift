@@ -12,13 +12,13 @@ final class LexerTests: XCTestCase {
     func testEmptyInput() throws {
         let input = ""
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken(), .eof)
+        XCTAssertEqual(lexer.nextToken().token, .eof)
     }
     
     func testWhitespaceInput() throws {
         let input = "      "
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken(), .eof)
+        XCTAssertEqual(lexer.nextToken().token, .eof)
     }
     
     func testNodeDeclInput() {
@@ -28,13 +28,13 @@ final class LexerTests: XCTestCase {
         }
         """
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken(), .node)
-        XCTAssertEqual(lexer.nextToken(), .identifier("A"))
-        XCTAssertEqual(lexer.nextToken(), .lbrace)
-        XCTAssertEqual(lexer.nextToken(), .color)
-        XCTAssertEqual(lexer.nextToken(), .colon)
-        XCTAssertEqual(lexer.nextToken(), .identifier("blue"))
-        XCTAssertEqual(lexer.nextToken(), .rbrace)
+        XCTAssertEqual(lexer.nextToken().token, .node)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("A"))
+        XCTAssertEqual(lexer.nextToken().token, .lbrace)
+        XCTAssertEqual(lexer.nextToken().token, .color)
+        XCTAssertEqual(lexer.nextToken().token, .colon)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("blue"))
+        XCTAssertEqual(lexer.nextToken().token, .rbrace)
     }
     
     func testEdgeDeclInput() {
@@ -45,27 +45,27 @@ final class LexerTests: XCTestCase {
         }
         """
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken(), .edge)
-        XCTAssertEqual(lexer.nextToken(), .identifier("A"))
-        XCTAssertEqual(lexer.nextToken(), .arrow)
-        XCTAssertEqual(lexer.nextToken(), .identifier("B"))
-        XCTAssertEqual(lexer.nextToken(), .lbrace)
-        XCTAssertEqual(lexer.nextToken(), .color)
-        XCTAssertEqual(lexer.nextToken(), .colon)
-        XCTAssertEqual(lexer.nextToken(), .identifier("red"))
-        XCTAssertEqual(lexer.nextToken(), .label)
-        XCTAssertEqual(lexer.nextToken(), .colon)
-        XCTAssertEqual(lexer.nextToken(), .quote)
-        XCTAssertEqual(lexer.nextToken(), .identifier("AtoB"))
-        XCTAssertEqual(lexer.nextToken(), .quote)
-        XCTAssertEqual(lexer.nextToken(), .rbrace)
+        XCTAssertEqual(lexer.nextToken().token, .edge)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("A"))
+        XCTAssertEqual(lexer.nextToken().token, .arrow)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("B"))
+        XCTAssertEqual(lexer.nextToken().token, .lbrace)
+        XCTAssertEqual(lexer.nextToken().token, .color)
+        XCTAssertEqual(lexer.nextToken().token, .colon)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("red"))
+        XCTAssertEqual(lexer.nextToken().token, .label)
+        XCTAssertEqual(lexer.nextToken().token, .colon)
+        XCTAssertEqual(lexer.nextToken().token, .quote)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("AtoB"))
+        XCTAssertEqual(lexer.nextToken().token, .quote)
+        XCTAssertEqual(lexer.nextToken().token, .rbrace)
     }
     
     func testUnknownInput() {
         let input = " - > ,"
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken(), .unknown("-"))
-        XCTAssertEqual(lexer.nextToken(), .unknown(">"))
-        XCTAssertEqual(lexer.nextToken(), .unknown(","))
+        XCTAssertEqual(lexer.nextToken().token, .unknown("-"))
+        XCTAssertEqual(lexer.nextToken().token, .unknown(">"))
+        XCTAssertEqual(lexer.nextToken().token, .unknown(","))
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 class Parser {
     private let lexer: Lexer
-    private var currentToken: Token
+    private var currentToken: LexedToken
     
     init(lexer: Lexer) {
         self.lexer = lexer
@@ -21,24 +21,23 @@ class Parser {
     }
     
     private func expect(_ expectedToken: Token) throws {
-        print("current token: \(currentToken), expected: \(expectedToken)")
-        if currentToken == expectedToken {
+        if currentToken.token == expectedToken {
             advance()
         } else {
-            throw ParseError.unexpectedToken(expected: expectedToken, actual: currentToken)
+            throw ParseError.unexpectedToken(expected: expectedToken, found: currentToken)
         }
     }
     
     func parse() throws -> ASTNode {
         var elements: [ASTNode] = []
-        while currentToken != .eof {
-            switch currentToken {
+        while currentToken.token != .eof {
+            switch currentToken.token {
             case .node:
                 elements.append(.node(try parseNode()))
             case .edge:
                 elements.append(.edge(try parseEdge()))
             default:
-                throw ParseError.unexpectedToken(expected: .node, actual: currentToken)
+                throw ParseError.unexpectedToken(expected: .node, found: currentToken)
             }
         }
         
@@ -50,19 +49,19 @@ class Parser {
         var children: [ASTNode.NodeDecl] = []
         
         try expect(.node)
-        guard case let .identifier(id) = currentToken else {
+        guard case let .identifier(id) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         
         advance()
         try expect(.lbrace)
         
-        while currentToken != .rbrace {
-            switch currentToken {
+        while currentToken.token != .rbrace {
+            switch currentToken.token {
             case .color:
                 try expect(.color)
                 try expect(.colon)
-                guard case let .identifier(color) = currentToken else {
+                guard case let .identifier(color) = currentToken.token else {
                     throw ParseError.expectedIdentifier
                 }
                 attribute = .color(color)
@@ -72,7 +71,7 @@ class Parser {
                 children.append(try parseNode())
                 
             default:
-                throw ParseError.unexpectedToken(expected: .rbrace, actual: currentToken)
+                throw ParseError.unexpectedToken(expected: .rbrace, found: currentToken)
             }
         }
         
@@ -83,27 +82,27 @@ class Parser {
     private func parseEdge() throws -> ASTNode.EdgeDecl {
         var attributes: [ASTNode.EdgeAttribute] = []
         try expect(.edge)
-        guard case let .identifier(from) = currentToken else {
+        guard case let .identifier(from) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         advance()
         
         try expect(.arrow)
-        guard case let .identifier(to) = currentToken else {
+        guard case let .identifier(to) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         advance()
         
         try expect(.lbrace)
        
-        while currentToken != .rbrace {
-            switch currentToken {
+        while currentToken.token != .rbrace {
+            switch currentToken.token {
             case .color:
                 attributes.append(try parseColorAttribute())
             case .label:
                 attributes.append(try parseLabelAttribute())
             default:
-                throw ParseError.unexpectedToken(expected: .rbrace, actual: currentToken)
+                throw ParseError.unexpectedToken(expected: .rbrace, found: currentToken)
             }
         }
         
@@ -115,7 +114,7 @@ class Parser {
     private func parseColorAttribute() throws -> ASTNode.EdgeAttribute {
         try expect(.color)
         try expect(.colon)
-        guard case let .identifier(color) = currentToken else {
+        guard case let .identifier(color) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         advance()
@@ -126,7 +125,7 @@ class Parser {
         try expect(.label)
         try expect(.colon)
         try expect(.quote)
-        guard case let .identifier(label) = currentToken else {
+        guard case let .identifier(label) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         advance()

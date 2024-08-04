@@ -8,13 +8,13 @@
 import Foundation
 
 enum ParseError: Error, CustomStringConvertible, Equatable {
-    case unexpectedToken(expected: Token, actual: Token)
+    case unexpectedToken(expected: Token, found: LexedToken)
     case expectedIdentifier
     
     var description: String {
         switch self {
-        case let .unexpectedToken(expected, actual):
-            return "Unexpected token: expected \(expected), got \(actual)"
+        case let .unexpectedToken(expected, found):
+            return "Unexpected token at line: \(found.position.line). Expected \(expected), found \(found.token)"
         case .expectedIdentifier:
             return "Expected identifier"
         }

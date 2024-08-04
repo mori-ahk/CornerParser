@@ -273,7 +273,19 @@ final class ParserTests: XCTestCase {
         """
         let parser = CornerParser(input: input)
         XCTAssertThrowsError(try parser.parse()) { error in
-            XCTAssertEqual(error as? ParseError, .unexpectedToken(expected: .lbrace, actual: .arrow))
+            XCTAssertEqual(
+                error as? ParseError,
+                .unexpectedToken(
+                    expected: .lbrace,
+                    found: LexedToken(
+                        token: .arrow,
+                        position: .init(
+                            line: 1,
+                            column: 8
+                        )
+                    )
+                )
+            )
         }
     }
 }

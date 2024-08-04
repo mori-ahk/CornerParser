@@ -10,14 +10,24 @@ import Foundation
 class Lexer {
     private let input: String
     private var currentIndex: String.Index
+    private var currentPosition: Token.Position
     
     init(input: String) {
         self.input = input
         self.currentIndex = input.startIndex
+        self.currentPosition = .init(line: 1, column: 1)
     }
     
     private func advance() {
-        currentIndex = input.index(after: currentIndex)
+        if currentIndex < input.endIndex {
+            if input[currentIndex] == "\n" {
+                currentPosition.line += 1
+                currentPosition.column = 1
+            } else {
+                currentPosition.column += 1
+            }
+            currentIndex = input.index(after: currentIndex)
+        }
     }
     
     private func peek() -> Character? {
@@ -34,28 +44,29 @@ class Lexer {
         return result
     }
     
-    func nextToken() -> Token {
+    func nextToken() -> LexedToken {
         while let currentChar = peek() {
+            let tokenPosition = currentPosition
             switch currentChar {
             case "{":
                 advance()
-                return .lbrace
+                return LexedToken(token: .lbrace, position: tokenPosition)
             case "}":
                 advance()
-                return .rbrace
+                return LexedToken(token: .rbrace, position: tokenPosition)
             case ":":
                 advance()
-                return .colon
+                return LexedToken(token: .colon, position: tokenPosition)
             case "\"":
                 advance()
-                return .quote
+                return LexedToken(token: .quote, position: tokenPosition)
             case "-":
                 advance()
                 if let nextChar = peek(), nextChar == ">" {
                     advance()
-                    return .arrow
+                    return LexedToken(token: .arrow, position: tokenPosition)
                 } else {
-                    return .unknown("-")
+                    return LexedToken(token: .unknown("-"), position: tokenPosition)
                 }
             case let char where char.isWhitespace:
                 _ = consumeWhile { $0.isWhitespace }
@@ -63,21 +74,21 @@ class Lexer {
                 let identifier = consumeWhile { $0.isLetter || $0.isNumber }
                 switch identifier {
                 case "node":
-                    return .node
+                    return LexedToken(token: .node, position: tokenPosition)
                 case "edge":
-                    return .edge
+                    return LexedToken(token: .edge, position: tokenPosition)
                 case "color":
-                    return .color
+                    return LexedToken(token: .color, position: tokenPosition)
                 case "label":
-                    return .label
+                    return LexedToken(token: .label, position: tokenPosition)
                 default:
-                    return .identifier(identifier)
+                    return LexedToken(token: .identifier(identifier), position: tokenPosition)
                 }
             default:
                 advance()
-                return .unknown(String(currentChar))
+                return LexedToken(token: .unknown(String(currentChar)), position: tokenPosition)
             }
         }
-        return .eof
+        return LexedToken(token: .eof, position: currentPosition)
     }
 }
