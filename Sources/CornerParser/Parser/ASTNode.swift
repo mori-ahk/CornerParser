@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ASTNode: Equatable {
+public enum ASTNode: Equatable {
     case diagram(children: [ASTNode])
     case node(NodeDecl)
     case edge(EdgeDecl)
@@ -21,7 +21,7 @@ enum ASTNode: Equatable {
         case label(String)
     }
     
-    struct NodeDecl: Equatable {
+    public struct NodeDecl: Equatable {
         let id: String
         let attribute: NodeAttribute?
         let children: [ASTNode.NodeDecl]
@@ -33,7 +33,7 @@ enum ASTNode: Equatable {
         }
     }
     
-    struct EdgeDecl: Equatable {
+    public struct EdgeDecl: Equatable {
         let from: String
         let to: String
         let attributes: [EdgeAttribute]
