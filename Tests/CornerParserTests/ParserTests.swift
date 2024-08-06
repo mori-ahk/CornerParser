@@ -53,35 +53,6 @@ final class ParserTests: XCTestCase {
         )
     }
     
-    func testNodeDeclWithAttributeAndChildren() throws {
-        let input = """
-        node A {
-            color: blue
-            node B {}
-            node C {}
-        }
-        """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
-        XCTAssertEqual(
-            ast,
-            .diagram(
-                children: [
-                    .node(
-                        .init(
-                            id: "A",
-                            attribute: .color("blue"),
-                            children: [
-                                .init(id: "B"),
-                                .init(id: "C")
-                            ]
-                        )
-                    )
-                ]
-            )
-        )
-    }
-    
     func testNodeDecls() throws {
         let input = """
         node A { }
@@ -113,42 +84,6 @@ final class ParserTests: XCTestCase {
                 children: [
                     .node(.init(id: "A", attribute: .color("red"))),
                     .node(.init(id: "B", attribute: .color("green"))),
-                ]
-            )
-        )
-    }
-    
-    func testNodeDeclsWithAttributeAndChildren() throws {
-        let input = """
-        node A { 
-            color: red
-            node C { }
-        }
-        node B { 
-            color: green
-            node D { }
-        }
-        """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
-        XCTAssertEqual(
-            ast,
-            .diagram(
-                children: [
-                    .node(
-                        .init(
-                            id: "A",
-                            attribute: .color("red"),
-                            children: [.init(id: "C")]
-                        )
-                    ),
-                    .node(
-                        .init(
-                            id: "B",
-                            attribute: .color("green"),
-                            children: [.init(id: "D")]
-                        )
-                    ),
                 ]
             )
         )

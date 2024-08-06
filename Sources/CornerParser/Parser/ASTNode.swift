@@ -24,12 +24,10 @@ public enum ASTNode: Equatable {
     public struct NodeDecl: Equatable {
         let id: String
         let attribute: NodeAttribute?
-        let children: [ASTNode.NodeDecl]
         
-        init(id: String, attribute: NodeAttribute? = nil, children: [ASTNode.NodeDecl] = []) {
+        init(id: String, attribute: NodeAttribute? = nil) {
             self.id = id
             self.attribute = attribute
-            self.children = children
         }
     }
     
