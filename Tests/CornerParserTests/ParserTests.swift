@@ -4,15 +4,15 @@ import XCTest
 final class ParserTests: XCTestCase {
     func testEmptyInput() throws {
         let input = ""
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(ast, .diagram(children: []))
     }
     
     func testWhitespaceInput() throws {
         let input = "     "
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(ast, .diagram(children: []))
     }
     
@@ -20,8 +20,8 @@ final class ParserTests: XCTestCase {
         let input = """
         node A { }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -36,8 +36,8 @@ final class ParserTests: XCTestCase {
             color: blue
         }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -58,8 +58,8 @@ final class ParserTests: XCTestCase {
         node A { }
         node B { }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -76,8 +76,8 @@ final class ParserTests: XCTestCase {
         node A { color: red }
         node B { color: green }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -93,8 +93,8 @@ final class ParserTests: XCTestCase {
         let input = """
         edge A -> B { }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -114,8 +114,8 @@ final class ParserTests: XCTestCase {
             label: "e"
         }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -137,8 +137,8 @@ final class ParserTests: XCTestCase {
         edge A -> B {}
         edge A -> C {}
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -161,8 +161,8 @@ final class ParserTests: XCTestCase {
             label: "AtoC"
         }
         """
-        let parser = CornerParser(input: input)
-        let ast = try parser.parse()
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
         XCTAssertEqual(
             ast,
             .diagram(
@@ -193,8 +193,8 @@ final class ParserTests: XCTestCase {
             label: "AtoB"
         }
         """
-        let parser = CornerParser(input: input)
-        XCTAssertThrowsError(try parser.parse()) { error in
+        let parser = CornerParser()
+        XCTAssertThrowsError(try parser.parse(input)) { error in
             XCTAssertEqual(error as? ParseError, .expectedIdentifier)
         }
     }
@@ -206,8 +206,8 @@ final class ParserTests: XCTestCase {
             label: "AtoB"
         }
         """
-        let parser = CornerParser(input: input)
-        XCTAssertThrowsError(try parser.parse()) { error in
+        let parser = CornerParser()
+        XCTAssertThrowsError(try parser.parse(input)) { error in
             XCTAssertEqual(
                 error as? ParseError,
                 .unexpectedToken(

@@ -2,13 +2,14 @@
 // https://docs.swift.org/swift-book
 
 final public class CornerParser {
-    let parser: Parser
+    var parser: Parser
     
-    public init(input: String) {
-        self.parser = Parser(lexer: Lexer(input: input))
+    public init() {
+        self.parser = Parser(lexer: Lexer(input: ""))
     }
     
-    public func parse() throws -> ASTNode? {
+    public func parse(_ input: String) throws -> ASTNode? {
+        self.parser = Parser(lexer: Lexer(input: input))
         do {
             return try parser.parse()
         } catch {
