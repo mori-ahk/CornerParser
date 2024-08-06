@@ -4,11 +4,11 @@
 final public class CornerParser {
     var parser: Parser
     
-    public init(input: String) {
-        self.parser = Parser(lexer: Lexer(input: input))
+    public init() {
+        self.parser = Parser(lexer: Lexer(input: ""))
     }
     
-    public func parse(input: String) throws -> ASTNode? {
+    public func parse(_ input: String) throws -> ASTNode? {
         self.parser = Parser(lexer: Lexer(input: input))
         do {
             return try parser.parse()
