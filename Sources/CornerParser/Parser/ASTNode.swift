@@ -10,7 +10,6 @@ import Foundation
 public enum ASTNode: Equatable {
     case diagram(children: [ASTNode])
     case node(NodeDecl)
-    case edge(EdgeDecl)
     
     public enum NodeAttribute: Equatable {
        case color(String)
@@ -24,10 +23,12 @@ public enum ASTNode: Equatable {
     public struct NodeDecl: Equatable {
         public let id: String
         public let attribute: NodeAttribute?
+        public let edges: [EdgeDecl]
         
-        init(id: String, attribute: NodeAttribute? = nil) {
+        init(id: String, attribute: NodeAttribute? = nil, edges: [EdgeDecl] = []) {
             self.id = id
             self.attribute = attribute
+            self.edges = edges
         }
     }
     
@@ -47,7 +48,7 @@ public enum ASTNode: Equatable {
         switch self {
         case .node:
             return true
-        case .edge, .diagram:
+        case .diagram:
             return false
         }
     }
