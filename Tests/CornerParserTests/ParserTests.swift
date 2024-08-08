@@ -91,27 +91,8 @@ final class ParserTests: XCTestCase {
     
     func testEdgeDecl() throws {
         let input = """
-        edge A -> B { }
-        """
-        let parser = CornerParser()
-        let ast = try parser.parse(input)
-        XCTAssertEqual(
-            ast,
-            .diagram(
-                children: [
-                    .edge(
-                        .init(from: "A", to: "B")
-                    )
-                ]
-            )
-        )
-    }
-    
-    func testEdgeDeclWithAttributes() throws {
-        let input = """
-        edge A -> B { 
-            color: blue
-            label: "e"
+        node A {
+            edge A -> B { }
         }
         """
         let parser = CornerParser()
@@ -120,11 +101,37 @@ final class ParserTests: XCTestCase {
             ast,
             .diagram(
                 children: [
-                    .edge(
+                    .node(.init(id: "A", edges: [.init(from: "A", to: "B")]))
+                ]
+            )
+        )
+    }
+    
+    func testEdgeDeclWithAttributes() throws {
+        let input = """
+        node A {
+            edge A -> B {
+                color: blue
+                label: "e"
+            }
+        }
+        """
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
+        XCTAssertEqual(
+            ast,
+            .diagram(
+                children: [
+                    .node(
                         .init(
-                            from: "A",
-                            to: "B",
-                            attributes: [.color("blue"), .label("e")]
+                            id: "A",
+                            edges: [
+                                .init(
+                                    from: "A",
+                                    to: "B",
+                                    attributes: [.color("blue"), .label("e")]
+                                )
+                            ]
                         )
                     )
                 ]
@@ -134,8 +141,10 @@ final class ParserTests: XCTestCase {
     
     func testEdgeDecls() throws {
         let input = """
-        edge A -> B {}
-        edge A -> C {}
+        node A {
+            edge A -> B {}
+            edge A -> C {}
+        }
         """
         let parser = CornerParser()
         let ast = try parser.parse(input)
@@ -143,8 +152,15 @@ final class ParserTests: XCTestCase {
             ast,
             .diagram(
                 children: [
-                    .edge(.init(from: "A", to: "B")),
-                    .edge(.init(from: "A", to: "C"))
+                    .node(
+                        .init(
+                            id: "A",
+                            edges: [
+                                .init(from: "A", to: "B"),
+                                .init(from: "A", to: "C")
+                            ]
+                        )
+                    )
                 ]
             )
         )
@@ -152,13 +168,15 @@ final class ParserTests: XCTestCase {
     
     func testEdgeDeclsWithAttributes() throws {
         let input = """
-        edge A -> B {
-            color: blue
-            label: "AtoB"
-        }
-        edge A -> C {
-            color: red
-            label: "AtoC"
+        node A {
+            edge A -> B {
+                color: blue
+                label: "AtoB"
+            }
+            edge A -> C {
+                color: red
+                label: "AtoC"
+            }
         }
         """
         let parser = CornerParser()
@@ -167,18 +185,13 @@ final class ParserTests: XCTestCase {
             ast,
             .diagram(
                 children: [
-                    .edge(
+                    .node(
                         .init(
-                            from: "A",
-                            to: "B",
-                            attributes: [.color("blue"), .label("AtoB")]
-                        )
-                    ),
-                    .edge(
-                        .init(
-                            from: "A",
-                            to: "C",
-                            attributes: [.color("red"), .label("AtoC")]
+                            id: "A",
+                            edges: [
+                                .init(from: "A", to: "B", attributes: [.color("blue"), .label("AtoB")]),
+                                .init(from: "A", to: "C", attributes: [.color("red"), .label("AtoC")])
+                            ]
                         )
                     )
                 ]
