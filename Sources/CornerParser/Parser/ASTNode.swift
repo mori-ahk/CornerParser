@@ -12,18 +12,18 @@ public enum ASTNode: Equatable {
     case node(NodeDecl)
     case edge(EdgeDecl)
     
-    enum NodeAttribute: Equatable {
+    public enum NodeAttribute: Equatable {
        case color(String)
     }
     
-    enum EdgeAttribute: Equatable {
+    public enum EdgeAttribute: Equatable {
         case color(String)
         case label(String)
     }
     
     public struct NodeDecl: Equatable {
-        let id: String
-        let attribute: NodeAttribute?
+        public let id: String
+        public let attribute: NodeAttribute?
         
         init(id: String, attribute: NodeAttribute? = nil) {
             self.id = id
@@ -32,14 +32,23 @@ public enum ASTNode: Equatable {
     }
     
     public struct EdgeDecl: Equatable {
-        let from: String
-        let to: String
-        let attributes: [EdgeAttribute]
+        public let from: String
+        public let to: String
+        public let attributes: [EdgeAttribute]
         
         init(from: String, to: String, attributes: [EdgeAttribute] = []) {
             self.from = from
             self.to = to
             self.attributes = attributes
+        }
+    }
+    
+    public var isNode: Bool {
+        switch self {
+        case .node:
+            return true
+        case .edge, .diagram:
+            return false
         }
     }
 }
