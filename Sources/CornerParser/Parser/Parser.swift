@@ -119,12 +119,10 @@ class Parser {
     private func parseLabelAttribute() throws -> ASTNode.EdgeAttribute {
         try expect(.label)
         try expect(.colon)
-        try expect(.quote)
         guard case let .identifier(label) = currentToken.token else {
             throw ParseError.expectedIdentifier
         }
         advance()
-        try expect(.quote)
         return .label(label)
     }
 }

@@ -59,7 +59,13 @@ class Lexer {
                 return LexedToken(token: .colon, position: tokenPosition)
             case "\"":
                 advance()
-                return LexedToken(token: .quote, position: tokenPosition)
+                let identifier = consumeWhile { $0 != "\"" }
+                if peek() == "\"" {
+                    advance()
+                    return LexedToken(token: .identifier(identifier), position: tokenPosition)
+                } else {
+                    return LexedToken(token: .unknown(identifier), position: tokenPosition)
+                }
             case "-":
                 advance()
                 if let nextChar = peek(), nextChar == ">" {
