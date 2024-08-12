@@ -37,27 +37,24 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(lexer.nextToken().token, .rbrace)
     }
     
-    func testEdgeDeclInput() {
+    func testNodeDeclWithEdgesInput() {
         let input = """
-        edge A -> B {
-            color: red
-            label: "AtoB"
+        node A {
+            color: blue
+            calls B {}
         }
         """
         let lexer = Lexer(input: input)
-        XCTAssertEqual(lexer.nextToken().token, .edge)
+        XCTAssertEqual(lexer.nextToken().token, .node)
         XCTAssertEqual(lexer.nextToken().token, .identifier("A"))
-        XCTAssertEqual(lexer.nextToken().token, .arrow)
-        XCTAssertEqual(lexer.nextToken().token, .identifier("B"))
         XCTAssertEqual(lexer.nextToken().token, .lbrace)
         XCTAssertEqual(lexer.nextToken().token, .color)
         XCTAssertEqual(lexer.nextToken().token, .colon)
-        XCTAssertEqual(lexer.nextToken().token, .identifier("red"))
-        XCTAssertEqual(lexer.nextToken().token, .label)
-        XCTAssertEqual(lexer.nextToken().token, .colon)
-        XCTAssertEqual(lexer.nextToken().token, .quote)
-        XCTAssertEqual(lexer.nextToken().token, .identifier("AtoB"))
-        XCTAssertEqual(lexer.nextToken().token, .quote)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("blue"))
+        XCTAssertEqual(lexer.nextToken().token, .calls)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("B"))
+        XCTAssertEqual(lexer.nextToken().token, .lbrace)
+        XCTAssertEqual(lexer.nextToken().token, .rbrace)
         XCTAssertEqual(lexer.nextToken().token, .rbrace)
     }
     

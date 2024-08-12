@@ -9,11 +9,10 @@ import Foundation
 
 enum Token: Equatable {
     case node
-    case edge
+    case calls
     case identifier(String)
     case lbrace
     case rbrace
-    case arrow
     case colon
     case color
     case label
