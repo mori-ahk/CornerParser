@@ -92,7 +92,7 @@ final class ParserTests: XCTestCase {
     func testEdgeDecl() throws {
         let input = """
         node A {
-            edge A -> B { }
+            calls B {}
         }
         """
         let parser = CornerParser()
@@ -110,7 +110,7 @@ final class ParserTests: XCTestCase {
     func testEdgeDeclWithAttributes() throws {
         let input = """
         node A {
-            edge A -> B {
+            calls B {
                 color: blue
                 label: "e"
             }
@@ -142,8 +142,8 @@ final class ParserTests: XCTestCase {
     func testEdgeDecls() throws {
         let input = """
         node A {
-            edge A -> B {}
-            edge A -> C {}
+            calls B {}
+            calls C {}
         }
         """
         let parser = CornerParser()
@@ -169,11 +169,11 @@ final class ParserTests: XCTestCase {
     func testEdgeDeclsWithAttributes() throws {
         let input = """
         node A {
-            edge A -> B {
+            calls B {
                 color: blue
                 label: "AtoB"
             }
-            edge A -> C {
+            calls C {
                 color: red
                 label: "AtoC"
             }
@@ -214,7 +214,7 @@ final class ParserTests: XCTestCase {
     
     func testUnexpectedTokenError() throws {
         let input = """
-        node A -> {
+        node A : {
             color: blue
             label: "AtoB"
         }
@@ -226,7 +226,7 @@ final class ParserTests: XCTestCase {
                 .unexpectedToken(
                     expected: .lbrace,
                     found: LexedToken(
-                        token: .arrow,
+                        token: .colon,
                         position: .init(
                             line: 1,
                             column: 8

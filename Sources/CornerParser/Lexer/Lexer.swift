@@ -66,14 +66,6 @@ class Lexer {
                 } else {
                     return LexedToken(token: .unknown(identifier), position: tokenPosition)
                 }
-            case "-":
-                advance()
-                if let nextChar = peek(), nextChar == ">" {
-                    advance()
-                    return LexedToken(token: .arrow, position: tokenPosition)
-                } else {
-                    return LexedToken(token: .unknown("-"), position: tokenPosition)
-                }
             case let char where char.isWhitespace:
                 _ = consumeWhile { $0.isWhitespace }
             case let char where char.isLetter:
@@ -81,8 +73,8 @@ class Lexer {
                 switch identifier {
                 case "node":
                     return LexedToken(token: .node, position: tokenPosition)
-                case "edge":
-                    return LexedToken(token: .edge, position: tokenPosition)
+                case "calls":
+                    return LexedToken(token: .calls, position: tokenPosition)
                 case "color":
                     return LexedToken(token: .color, position: tokenPosition)
                 case "label":
