@@ -88,8 +88,6 @@ class Parser {
        
         while currentToken.token != .rbrace {
             switch currentToken.token {
-            case .color:
-                attributes.append(try parseColorAttribute())
             case .label:
                 attributes.append(try parseLabelAttribute())
             default:
@@ -101,17 +99,6 @@ class Parser {
         return ASTNode.EdgeDecl(from: nodeId, to: to, attributes: attributes)
     }
     
-    
-    private func parseColorAttribute() throws -> ASTNode.EdgeAttribute {
-        try expect(.color)
-        try expect(.colon)
-        guard case let .identifier(color) = currentToken.token else {
-            throw ParseError.expectedIdentifier
-        }
-        advance()
-        return .color(color)
-    }
-
     private func parseLabelAttribute() throws -> ASTNode.EdgeAttribute {
         try expect(.label)
         try expect(.colon)
