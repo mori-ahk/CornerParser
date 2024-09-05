@@ -16,7 +16,6 @@ public enum ASTNode: Equatable {
     }
     
     public enum EdgeAttribute: Equatable {
-        case color(String)
         case label(String)
     }
     

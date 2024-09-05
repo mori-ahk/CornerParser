@@ -111,7 +111,6 @@ final class ParserTests: XCTestCase {
         let input = """
         node A {
             calls B {
-                color: blue
                 label: "e"
             }
         }
@@ -129,7 +128,7 @@ final class ParserTests: XCTestCase {
                                 .init(
                                     from: "A",
                                     to: "B",
-                                    attributes: [.color("blue"), .label("e")]
+                                    attributes: [.label("e")]
                                 )
                             ]
                         )
@@ -170,11 +169,9 @@ final class ParserTests: XCTestCase {
         let input = """
         node A {
             calls B {
-                color: blue
                 label: "AtoB"
             }
             calls C {
-                color: red
                 label: "AtoC"
             }
         }
@@ -189,8 +186,8 @@ final class ParserTests: XCTestCase {
                         .init(
                             id: "A",
                             edges: [
-                                .init(from: "A", to: "B", attributes: [.color("blue"), .label("AtoB")]),
-                                .init(from: "A", to: "C", attributes: [.color("red"), .label("AtoC")])
+                                .init(from: "A", to: "B", attributes: [.label("AtoB")]),
+                                .init(from: "A", to: "C", attributes: [.label("AtoC")])
                             ]
                         )
                     )
