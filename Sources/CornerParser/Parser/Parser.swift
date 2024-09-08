@@ -55,7 +55,7 @@ class Parser {
             case .node:
                 elements.append(.node(try parseNode()))
             default:
-                throw ParseError.unexpectedToken(expected: .node, found: currentToken)
+                throw ParseError.unexpectedToken(expected: Token.node.symbol, found: currentToken)
             }
         }
         
@@ -70,7 +70,7 @@ class Parser {
         if currentToken.token == expectedToken {
             advance()
         } else {
-            throw ParseError.unexpectedToken(expected: expectedToken, found: currentToken)
+            throw ParseError.unexpectedToken(expected: expectedToken.symbol, found: currentToken)
         }
     }
     
@@ -92,7 +92,7 @@ class Parser {
             case .calls:
                 edges.append(try parseEdge(for: id))
             default:
-                throw ParseError.unexpectedToken(expected: .rbrace, found: currentToken)
+                throw ParseError.unexpectedToken(expected: Token.rbrace.symbol, found: currentToken)
             }
         }
         
@@ -117,7 +117,7 @@ class Parser {
             case .label:
                 attributes.append(try parseLabelAttribute())
             default:
-                throw ParseError.unexpectedToken(expected: .rbrace, found: currentToken)
+                throw ParseError.unexpectedToken(expected: Token.rbrace.symbol, found: currentToken)
             }
         }
         
