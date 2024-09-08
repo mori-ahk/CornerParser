@@ -20,12 +20,12 @@ class SemanticAnalyzer {
         var errors: [SemanticError] = []
         var nodeIDs: Set<String> = []
         
-        analyzeNode(root, errors: &errors, nodeIDs: &nodeIDs)
-        
+        checkForDuplicateIDs(root, errors: &errors, nodeIDs: &nodeIDs)
+        checkForDanglingEdges(root, errors: &errors, nodeIDs: &nodeIDs)
         return errors
     }
     
-    private func analyzeNode(
+    private func checkForDuplicateIDs(
         _ node: ASTNode,
         errors: inout [SemanticError],
         nodeIDs: inout Set<String>
@@ -37,7 +37,7 @@ class SemanticAnalyzer {
             }
             
             for child in children {
-                analyzeNode(child, errors: &errors, nodeIDs: &nodeIDs)
+                checkForDuplicateIDs(child, errors: &errors, nodeIDs: &nodeIDs)
             }
         
         case .node(let nodeDecl):
@@ -46,7 +46,20 @@ class SemanticAnalyzer {
             } else {
                 nodeIDs.insert(nodeDecl.id)
             }
-            
+        }
+    }
+    
+    private func checkForDanglingEdges(
+        _ node: ASTNode,
+        errors: inout [SemanticError],
+        nodeIDs: inout Set<String>
+    ) {
+        switch node {
+        case .diagram(let children):
+            for child in children {
+                checkForDanglingEdges(child, errors: &errors, nodeIDs: &nodeIDs)
+            }
+        case .node(let nodeDecl):
             for edge in nodeDecl.edges {
                 if !nodeIDs.contains(edge.to) {
                     errors.append(.danglingEdge(from: edge.from, to: edge.to))
