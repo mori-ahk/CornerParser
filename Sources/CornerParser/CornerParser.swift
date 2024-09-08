@@ -1,5 +1,6 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
+
 /// A class responsible for parsing input strings into Abstract Syntax Trees (ASTs) for diagram generation.
 ///
 /// The ``CornerParser`` class acts as a wrapper around the core parsing logic, allowing users to provide input strings
@@ -15,7 +16,8 @@
 ///
 final public class CornerParser {
     private var parser: Parser
-   
+    private var semanticAnalyzer: SemanticAnalyzer
+    
     /// Initializes a new `CornerParser` instance with an empty input.
     ///
     /// The parser is initialized with an empty string, which will be replaced by actual input during the parsing process.
@@ -26,6 +28,7 @@ final public class CornerParser {
     /// ```
     public init() {
         self.parser = Parser(lexer: Lexer(input: ""))
+        self.semanticAnalyzer = SemanticAnalyzer()
     }
    
     /// Parses a given input string and returns the resulting ``ASTNode`` or throws an error if parsing fails.
@@ -68,5 +71,28 @@ final public class CornerParser {
         } catch {
             throw error
         }
+    }
+    
+    /// Analyzes a given ``ASTNode`` for semantic errors using the `SemanticAnalyzer`.
+    ///
+    /// This method runs the `SemanticAnalyzer` on the provided `ASTNode` and returns an array of `SemanticError`s.
+    /// It checks for various semantic issues such as duplicate node IDs, dangling edges, and invalid attributes.
+    ///
+    /// - Parameters:
+    ///   - root: An `ASTNode` representing the root of the parsed diagram or node structure.
+    ///
+    /// - Returns:
+    ///   An array of `SemanticError` representing the errors found during analysis. If no errors are found, the array is empty.
+    ///
+    /// # Example
+    /// ```swift
+    /// let cornerParser = CornerParser()
+    /// let input = "node A {}"
+    /// let ast = try cornerParser.parse(input)
+    /// let errors = cornerParser.analyze(ast!)
+    /// print(errors) // If there are any semantic errors, they will be listed here
+    /// ```
+    public func analyze(_ root: ASTNode) -> [SemanticError] {
+        return semanticAnalyzer.analyze(root)
     }
 }
