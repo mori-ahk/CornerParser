@@ -221,7 +221,7 @@ final class ParserTests: XCTestCase {
             XCTAssertEqual(
                 error as? ParseError,
                 .unexpectedToken(
-                    expected: .lbrace,
+                    expected: Token.lbrace.symbol,
                     found: LexedToken(
                         token: .colon,
                         position: .init(

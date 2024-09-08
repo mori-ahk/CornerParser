@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct LexedToken: Equatable {
+struct LexedToken: PositionAwareToken, Equatable {
     let token: Token
     let position: Token.Position
+    
+    var line: Int { position.line }
+    var column: Int { position.column }
+    var symbol: String { token.symbol }
 }
