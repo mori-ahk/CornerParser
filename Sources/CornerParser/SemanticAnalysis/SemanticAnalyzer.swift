@@ -8,7 +8,7 @@
 import Foundation
 
 /// A semantic analyzer for ASTNode that checks for common semantic errors.
-public class SemanticAnalyzer {
+class SemanticAnalyzer {
     
     /// Analyzes the given AST for semantic errors.
     ///
@@ -16,7 +16,7 @@ public class SemanticAnalyzer {
     ///     - root: The root ASTNode (typically a diagram node).
     ///
     /// - Returns: An array of ``SemanticError`` if any errors are found.
-    public func analyze(_ root: ASTNode) -> [SemanticError] {
+    func analyze(_ root: ASTNode) -> [SemanticError] {
         var errors: [SemanticError] = []
         var nodeIDs: Set<String> = []
         
