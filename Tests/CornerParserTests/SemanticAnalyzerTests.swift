@@ -18,8 +18,8 @@ final class SemanticAnalyzerTests: XCTestCase {
         """
         let parser = CornerParser()
         if let root = try? parser.parse(input) {
-            let errors = parser.analyze(root)
-            XCTAssertEqual(errors, [.duplicateNodeID("A")])
+            let result = parser.analyze(root)
+            XCTAssertEqual(result.errors, [.duplicateNodeID("A")])
         }
     }
     
@@ -32,8 +32,8 @@ final class SemanticAnalyzerTests: XCTestCase {
         """
         let parser = CornerParser()
         if let root = try? parser.parse(input) {
-            let errors = parser.analyze(root)
-            XCTAssertEqual(errors, [.danglingEdge(from: "A", to: "B")])
+            let result = parser.analyze(root)
+            XCTAssertEqual(result.errors, [.danglingEdge(from: "A", to: "B")])
         }
     }
     
@@ -41,8 +41,8 @@ final class SemanticAnalyzerTests: XCTestCase {
         let input = ""
         let parser = CornerParser()
         if let root = try? parser.parse(input) {
-            let errors = parser.analyze(root)
-            XCTAssertEqual(errors, [.emptyDiagram])
+            let result = parser.analyze(root)
+            XCTAssertEqual(result.errors, [.emptyDiagram])
         }
     }
     
@@ -63,9 +63,9 @@ final class SemanticAnalyzerTests: XCTestCase {
         """
         let parser = CornerParser()
         if let root = try? parser.parse(input) {
-            let errors = parser.analyze(root)
+            let result = parser.analyze(root)
             XCTAssertEqual(
-                errors,
+                result.errors,
                 [
                     .duplicateNodeID("A"),
                     .danglingEdge(from: "B", to: "C"),
@@ -87,8 +87,45 @@ final class SemanticAnalyzerTests: XCTestCase {
         
         let parser = CornerParser()
         if let root = try? parser.parse(input) {
-            let errors = parser.analyze(root)
-            XCTAssertTrue(errors.isEmpty)
+            let result = parser.analyze(root)
+            XCTAssertTrue(result.errors.isEmpty)
+        }
+    }
+    
+    func testUnreachableNodeWarning() {
+        let input =
+        """
+        node A {
+            calls B {}
+        }
+        
+        node C {}
+        node B {}
+        """
+        
+        let parser = CornerParser()
+        if let root = try? parser.parse(input) {
+            let result = parser.analyze(root)
+            XCTAssertEqual(result.warnings, [.unreachableNode("C")])
+        }
+    }
+    
+    func testWarningsAndErrors() {
+        let input =
+        """
+        node A {
+            calls B {}
+        }
+        
+        node A {}
+        node C {}
+        """
+        
+        let parser = CornerParser()
+        if let root = try? parser.parse(input) {
+            let result = parser.analyze(root)
+            XCTAssertEqual(result.errors, [.duplicateNodeID("A"), .danglingEdge(from: "A", to: "B")])
+            XCTAssertEqual(result.warnings, [.unreachableNode("C")])
         }
     }
 }

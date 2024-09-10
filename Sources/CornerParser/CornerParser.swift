@@ -82,7 +82,7 @@ final public class CornerParser {
     ///   - root: An `ASTNode` representing the root of the parsed diagram or node structure.
     ///
     /// - Returns:
-    ///   An array of `SemanticError` representing the errors found during analysis. If no errors are found, the array is empty.
+    ///   An array of ``SemanticAnalysisResult`` representing the errors found during analysis. If no errors are found, the array is empty.
     ///
     /// # Example
     /// ```swift
@@ -92,7 +92,7 @@ final public class CornerParser {
     /// let errors = cornerParser.analyze(ast!)
     /// print(errors) // If there are any semantic errors, they will be listed here
     /// ```
-    public func analyze(_ root: ASTNode) -> [SemanticError] {
+    public func analyze(_ root: ASTNode) -> SemanticAnalysisResult {
         return semanticAnalyzer.analyze(root)
     }
 }
