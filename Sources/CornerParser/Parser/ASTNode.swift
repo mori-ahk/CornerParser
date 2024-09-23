@@ -24,6 +24,9 @@ public enum ASTNode: Equatable {
     public enum NodeAttribute: Equatable {
         /// Specifies the color of the node, represented as a `String`.
         case color(String)
+        
+        /// Specifies the description of the node, represented as a `String`.
+        case description(String)
     }
     
     /// Represents an attribute that can be applied to an edge between nodes.
@@ -46,13 +49,13 @@ public enum ASTNode: Equatable {
         /// The unique identifier for the node.
         public let id: String
         
-        /// An optional attribute applied to the node, such as color.
-        public let attribute: NodeAttribute?
+        /// An array of attributes applied to the node, such as color and description.
+        public let attribute: [NodeAttribute]
         
         /// An array of edges connected to this node.
         public let edges: [EdgeDecl]
         
-        init(id: String, attribute: NodeAttribute? = nil, edges: [EdgeDecl] = []) {
+        init(id: String, attribute: [NodeAttribute] = [], edges: [EdgeDecl] = []) {
             self.id = id
             self.attribute = attribute
             self.edges = edges

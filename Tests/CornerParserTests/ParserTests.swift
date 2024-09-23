@@ -30,7 +30,7 @@ final class ParserTests: XCTestCase {
         )
     }
     
-    func testNodeDeclWithAttribute() throws {
+    func testNodeDeclWithColorAttribute() throws {
         let input = """
         node A {
             color: blue
@@ -45,7 +45,57 @@ final class ParserTests: XCTestCase {
                     .node(
                         ASTNode.NodeDecl(
                             id: "A",
-                            attribute: .color("blue")
+                            attribute: [.color("blue")]
+                        )
+                    )
+                ]
+            )
+        )
+    }
+    
+    func testNodeDeclWithDescAttribute() throws {
+        let input = """
+        node A {
+            desc: "Description"
+        }
+        """
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
+        XCTAssertEqual(
+            ast,
+            .diagram(
+                children: [
+                    .node(
+                        ASTNode.NodeDecl(
+                            id: "A",
+                            attribute: [.description("Description")]
+                        )
+                    )
+                ]
+            )
+        )
+    }
+    
+    func testNodeDeclWithAttributes() throws {
+        let input = """
+        node A {
+            color: blue
+            desc: "Description"
+        }
+        """
+        let parser = CornerParser()
+        let ast = try parser.parse(input)
+        XCTAssertEqual(
+            ast,
+            .diagram(
+                children: [
+                    .node(
+                        ASTNode.NodeDecl(
+                            id: "A",
+                            attribute: [
+                                .color("blue"),
+                                .description("Description")
+                            ]
                         )
                     )
                 ]
@@ -71,7 +121,7 @@ final class ParserTests: XCTestCase {
         )
     }
     
-    func testNodeDeclsWithAttribute() throws {
+    func testNodeDeclsWithColorAttribute() throws {
         let input = """
         node A { color: red }
         node B { color: green }
@@ -82,8 +132,8 @@ final class ParserTests: XCTestCase {
             ast,
             .diagram(
                 children: [
-                    .node(.init(id: "A", attribute: .color("red"))),
-                    .node(.init(id: "B", attribute: .color("green"))),
+                    .node(.init(id: "A", attribute: [.color("red")])),
+                    .node(.init(id: "B", attribute: [.color("green")])),
                 ]
             )
         )
