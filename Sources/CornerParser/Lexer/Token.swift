@@ -15,6 +15,7 @@ enum Token: Equatable {
     case rbrace
     case colon
     case color
+    case desc
     case label
     case quote
     case unknown(String)
@@ -34,6 +35,7 @@ enum Token: Equatable {
         case .rbrace: return "rbrace '}'"
         case .colon: return "':'"
         case .color: return "'color'"
+        case .desc: return "'desc'"
         case .label: return "'label'"
         case .quote: return "\""
         default: return ""

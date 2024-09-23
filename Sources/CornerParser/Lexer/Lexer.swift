@@ -77,6 +77,8 @@ class Lexer {
                     return LexedToken(token: .calls, position: tokenPosition)
                 case "color":
                     return LexedToken(token: .color, position: tokenPosition)
+                case "desc":
+                    return LexedToken(token: .desc, position: tokenPosition)
                 case "label":
                     return LexedToken(token: .label, position: tokenPosition)
                 default:

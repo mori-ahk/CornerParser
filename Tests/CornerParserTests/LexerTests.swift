@@ -25,6 +25,7 @@ final class LexerTests: XCTestCase {
         let input = """
         node A {
             color: blue
+            desc: "Description"
         }
         """
         let lexer = Lexer(input: input)
@@ -34,6 +35,9 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(lexer.nextToken().token, .color)
         XCTAssertEqual(lexer.nextToken().token, .colon)
         XCTAssertEqual(lexer.nextToken().token, .identifier("blue"))
+        XCTAssertEqual(lexer.nextToken().token, .desc)
+        XCTAssertEqual(lexer.nextToken().token, .colon)
+        XCTAssertEqual(lexer.nextToken().token, .identifier("Description"))
         XCTAssertEqual(lexer.nextToken().token, .rbrace)
     }
     
