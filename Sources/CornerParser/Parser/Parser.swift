@@ -75,7 +75,7 @@ class Parser {
     }
     
     private func parseNode() throws -> ASTNode.NodeDecl {
-        var attribute: ASTNode.NodeAttribute?
+        var attribute: [ASTNode.NodeAttribute] = []
         var edges: [ASTNode.EdgeDecl] = []
         try expect(.node)
         guard case let .identifier(id) = currentToken.token else {
@@ -88,7 +88,9 @@ class Parser {
         while currentToken.token != .rbrace {
             switch currentToken.token {
             case .color:
-                attribute = try parseColorAttribute()
+                attribute.append(try parseColorAttribute())
+            case .desc:
+                attribute.append(try parseDescAttribute())
             case .calls:
                 edges.append(try parseEdge(for: id))
             default:
@@ -135,6 +137,18 @@ class Parser {
         
         advance()
         return .color(color)
+    }
+   
+    private func parseDescAttribute() throws -> ASTNode.NodeAttribute {
+        try expect(.desc)
+        try expect(.colon)
+        
+        guard case let .identifier(description) = currentToken.token else {
+            throw ParseError.expectedIdentifier
+        }
+        
+        advance()
+        return .description(description)
     }
     
     private func parseLabelAttribute() throws -> ASTNode.EdgeAttribute {
